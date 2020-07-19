@@ -1,6 +1,7 @@
 #pragma once
 #include "Hello.hpp"
 #include <memory>
+#include <string>
 
 class HelloWrapper
 {
@@ -11,10 +12,17 @@ public:
     {
     };
 
-    Hello* get()
+    Hello& operator*()
+    {
+        return *_instance;
+    }
+
+    Hello* operator->()
     {
         return _instance.get();
     }
+
+    static std::shared_ptr<void> load(const std::string& path);
 private:
 
     std::shared_ptr<void> _lib;
