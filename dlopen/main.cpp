@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     std::unique_ptr<void, decltype(&dlclose)> lib(dlopen("./libJames.so", RTLD_LAZY),
                                                  &dlclose);
-    if(not lib.get())
+    if(not lib)
     {
         std::cout << "Failed to load!" << std::endl;
         return 1;
