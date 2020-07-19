@@ -13,12 +13,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    using createFunc = Hello*(*)();
-    using destroyFunc = void(*)(Hello*);
+    using createFunc = Hello*();
+    using destroyFunc = void(Hello*);
 
     dlerror();
-    createFunc create = (createFunc) dlsym(lib.get(), "create");
-    destroyFunc destroy = (destroyFunc) dlsym(lib.get(), "destroy");
+    createFunc* create = (createFunc*) dlsym(lib.get(), "create");
+    destroyFunc* destroy = (destroyFunc*) dlsym(lib.get(), "destroy");
 
     const char *dlsym_error = dlerror();
     if (dlsym_error)
