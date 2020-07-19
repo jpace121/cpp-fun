@@ -5,8 +5,9 @@
 
 int main(int argc, char *argv[])
 {
-    void* lib = dlopen("./libJames.so", RTLD_LAZY);
-    if(not lib)
+    std::unique_ptr<void, decltype(&dlclose)> lib(dlopen("./libJames.so", RTLD_LAZY),
+                                                 &dlclose);
+    if(not lib.get())
     {
         std::cout << "Failed to load!" << std::endl;
         return 1;
@@ -16,24 +17,19 @@ int main(int argc, char *argv[])
     using destroyFunc = void(*)(Hello*);
 
     dlerror();
-    createFunc create = (createFunc) dlsym(lib, "create");
-    destroyFunc destroy = (destroyFunc) dlsym(lib, "destroy");
+    createFunc create = (createFunc) dlsym(lib.get(), "create");
+    destroyFunc destroy = (destroyFunc) dlsym(lib.get(), "destroy");
 
     const char *dlsym_error = dlerror();
     if (dlsym_error)
     {
         std::cout << "Failed to find symbol." << std::endl;
-        dlclose(lib);
         return 1;
     }
 
-    auto james = create();
+    std::unique_ptr<Hello, decltype(destroy)> james(create(), destroy);
 
     james->print();
-
-    destroy(james);
-
-    dlclose(lib);
 
 
     return 0;
