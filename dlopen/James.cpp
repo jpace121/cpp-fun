@@ -5,7 +5,12 @@ std::string James::name() const
     return "James";
 }
 
-std::unique_ptr<James> create()
+James* create()
 {
-    return std::make_unique<James>();
+    return new James;
+}
+
+void destroy(James* ptr)
+{
+    delete ptr;
 }

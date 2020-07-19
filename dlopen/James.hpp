@@ -1,6 +1,5 @@
 #pragma once
 #include "Hello.hpp"
-#include <memory>
 
 class James : public Hello
 {
@@ -9,5 +8,7 @@ class James : public Hello
 
 extern "C"
 {
-std::unique_ptr<James> create();
+James* create();
+
+void destroy(James *ptr);
 }

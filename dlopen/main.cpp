@@ -12,10 +12,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    using createFunc = std::unique_ptr<Hello>(*)();
+    using createFunc = Hello*(*)();
+    using destroyFunc = void(*)(Hello*);
 
     dlerror();
     createFunc create = (createFunc) dlsym(lib, "create");
+    destroyFunc destroy = (destroyFunc) dlsym(lib, "destroy");
 
     const char *dlsym_error = dlerror();
     if (dlsym_error)
@@ -28,6 +30,8 @@ int main(int argc, char *argv[])
     auto james = create();
 
     james->print();
+
+    destroy(james);
 
     dlclose(lib);
 
